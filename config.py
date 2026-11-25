@@ -1,20 +1,24 @@
 from pathlib import Path
 import re
 
-
 # --- НАСТРОЙКИ ПУТЕЙ ---
 SCRIPT_DIR = Path(__file__).parent
 
-# Указываем абсолютные пути к новым данным
+# Базовая папка с вашими данными (там, где лежат JSON-экспорты)
 BASE_DATA_DIR = Path(r"D:\PRJ_Python\00_TelegaJSON\02_HudClub")
-CHATS_ROOT = Path(r"D:\PRJ_Python\00_TelegaJSON\02_HudClub\02_ExportedChats")
-SPISOK_JSON = Path(r"D:\PRJ_Python\00_TelegaJSON\02_HudClub\SpisokHudClub.JSON")
-NEW_USER_JSON = BASE_DATA_DIR / "NEW_USER.JSON" # Будет создаваться в той же папке с данными
 
-# Папка для генерации сайта (остается в проекте)
+# Пути к конкретным файлам и папкам
+CHATS_ROOT = BASE_DATA_DIR / "02_ExportedChats"
+SPISOK_JSON = BASE_DATA_DIR / "SpisokHudClub.JSON"
+HASHTAGS_JSON = BASE_DATA_DIR / "ListOfHashtags.json"
+NEW_USER_JSON = BASE_DATA_DIR / "NEW_USER.JSON" 
+
+# Папка для генерации сайта (остается внутри проекта)
 WWW_ROOT = SCRIPT_DIR / "Gallery_Web"
 IMG_DIR_NAME = "assets"
 
+
+# --- КОНСТАНТЫ И РЕГУЛЯРКИ ---
 SAFE_ID_RE = re.compile(r'^[A-Za-z0-9_]+$')
 
 # Цвета бейджей «новое» для разных заданий
