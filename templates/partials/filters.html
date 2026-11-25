@@ -1,0 +1,8 @@
+<div class="tag-filters">
+    {% for tag in target_hashtags %}
+    <button class="filter-btn" data-filter="{{ tag }}" data-filter-type="tag">{{ tag }}</button>
+    {% endfor %}
+    {% for r in new_reviews %}
+    <button class="filter-btn" data-filter="new_{{ loop.index0 }}" data-filter-type="new" style="background:{{ r.color }}; color:#fff;">🆕 Новые {{ loop.index }}</button>
+    {% endfor %}
+</div>

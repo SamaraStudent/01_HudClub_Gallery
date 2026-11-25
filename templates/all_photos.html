@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Общая выставка{% endblock %}
+{% block filters %}{% include 'partials/filters.html' %}{% endblock %}
+{% block content %}
+<h1>Общая выставка {{ title_suffix }}</h1>
+{% for u in all_to_gen %}
+<section class="author-block">
+    <h2>{{ u.list_number }}. {{ u.name }}</h2>
+    <div class="gallery">
+        {% for img in u.photos %}
+            {% with fancybox_group="all_gallery" %}
+                {% include 'partials/gallery_item.html' %}
+            {% endwith %}
+        {% endfor %}
+    </div>
+</section>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,9 @@
+<div class="gallery-item" data-tags="{{ img.tag }}" {% if img.new_idx is not none %}data-new="{{ img.new_idx }}"{% endif %}>
+    <a href="{{ img.web_p }}" data-fancybox="{{ fancybox_group }}" data-caption="{{ img.caption }}">
+        <img src="{{ img.web_p }}" loading="lazy" alt="">
+    </a>
+    {% if img.new_idx is not none %}
+    <div class="new-badge" style="background:{{ img.new_color }}">🆕 Новое {{ img.new_idx + 1 }}</div>
+    {% endif %}
+    <div class="tag-badge">{{ img.tag }}</div>
+</div>

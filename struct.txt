@@ -1,0 +1,44 @@
+gallery_project/
+│
+├── run.py                        ← точка входа (запускать это)
+├── requirements.txt
+│
+├── config.py                     ← все настройки и константы
+│
+├── core/                         ← логика (чистый Python, без HTML)
+│   ├── __init__.py
+│   ├── utils.py                  ← esc, safe_id, normalize_input
+│   ├── parser.py                 ← разбор хештегов, дат, ввода
+│   ├── collector.py              ← сбор фото из JSON-экспортов
+│   └── renderer.py               ← рендеринг страниц
+│
+├── templates/                    ← HTML-шаблоны (Jinja2)
+│   ├── base.html                 ← каркас страницы
+│   ├── index.html                ← список участников
+│   ├── all_photos.html           ← общая выставка
+│   ├── user.html                 ← страница автора
+│   └── partials/
+│       ├── header.html           ← шапка с кнопками
+│       ├── filters.html          ← блок фильтров
+│       └── gallery_item.html     ← карточка фото
+│
+├── static/                       ← CSS и JS (копируются в output)
+│   ├── css/
+│   │   └── style.css
+│   └── js/
+│       ├── size_slider.js        ← слайдер размера миниатюр
+│       ├── filters.js            ← фильтры хештегов и «Новые»
+│       └── review.js             ← режим разбора (canvas, кисть, ластик)
+│
+├── 00_Data/                      ← данные (копируются сюда же или линкуются)
+│   ├── Spisok.JSON
+│   ├── NEW_USER.JSON
+│   └── ExportedChats/
+│       └── ...
+│
+└── Gallery_Web/                  ← генерируется (не редактировать вручную)
+    ├── index.html
+    ├── all_photos.html
+    ├── user_*.html
+    ├── assets/
+    └── static/
