@@ -3,6 +3,7 @@ from pathlib import Path
 from nicegui import ui, run
 from config import HASHTAGS_JSON
 from core.generator import run_generation
+from core.theme_manager import get_themes, save_current_theme, load_theme
 
 # Загрузка и сохранение
 def load_hashtags():
@@ -19,11 +20,11 @@ def save_hashtags(data):
 def update_main_icon(m_btn, c_items):
     act = sum(1 for i in c_items if i['is_active'])
     if act == len(c_items) and act > 0:
-        m_btn.props('icon="check_box"') # Выбрано всё
+        m_btn.props('icon="check_box"')
     elif act == 0:
-        m_btn.props('icon="check_box_outline_blank"') # Не выбрано ничего
+        m_btn.props('icon="check_box_outline_blank"')
     else:
-        m_btn.props('icon="indeterminate_check_box"') # Выбрано частично
+        m_btn.props('icon="indeterminate_check_box"')
 
 # Глобальные данные
 hashtags_data = load_hashtags()
@@ -43,6 +44,7 @@ def main_page():
     with ui.tabs().classes('w-full border-b border-gray-300') as tabs:
         tab_paths = ui.tab('Настройки путей', icon='settings')
         tab_hashtags = ui.tab('Хештеги и генерация', icon='tag')
+        tab_themes = ui.tab('Дизайн и Темы', icon='palette')
         
     with ui.tab_panels(tabs, value=tab_hashtags).classes('w-full pt-4'):
         
@@ -56,14 +58,12 @@ def main_page():
             
             menu_refs = []
 
-            # Ряд с кнопками-списками
             with ui.row().classes('w-full items-start justify-start gap-4 mb-8 flex-nowrap'):
                 for json_cat_name, display_name in CATEGORIES:
                     cat_items = [item for item in hashtags_data if item.get('category') == json_cat_name]
                     
                     with ui.column().classes('w-64 shrink-0 relative'):
                         
-                        # 1. Шапка списка
                         with ui.row().classes('bg-blue-500 text-white p-2 rounded-md w-full items-center no-wrap cursor-pointer hover:bg-blue-600 transition-colors') as header:
                             
                             main_btn = ui.button().props('flat dense color="white"').classes('p-0 min-h-0')
@@ -72,7 +72,6 @@ def main_page():
                             lbl = ui.label(display_name).classes('font-bold ml-2 flex-grow')
                             icon = ui.icon('expand_more').classes('text-white/80 transition-transform duration-200')
                         
-                        # 2. Выпадающее меню (сделали ширину w-64, как у шапки)
                         with ui.menu().classes('p-0 w-64 shadow-lg border border-gray-200 rounded-md') as menu:
                             menu_refs.append(menu)
                             with ui.column().classes('p-2 max-h-[400px] overflow-y-auto gap-1 bg-white w-full'):
@@ -117,16 +116,13 @@ def main_page():
                         
                         header.on('click', open_menu)
 
-            # Нижняя панель с генерацией (сделали кнопку в точности как шапки)
             with ui.row().classes('mb-4 gap-4 items-center'):
-                # Убрали color='blue' и добавили классы bg-blue-500, rounded-md, transition-colors
                 generate_btn = ui.button('Сгенерировать сайт', icon='play_arrow').classes('bg-blue-500 text-white font-bold px-6 py-2 rounded-md hover:bg-blue-600 transition-colors shadow-none')
                 spinner = ui.spinner(size='lg', color='blue').classes('hidden')
 
             ui.label('Лог выполнения:').classes('mt-2 font-bold text-gray-500')
             log_area = ui.log(max_lines=100).classes('w-full h-48 font-mono text-sm bg-gray-900 text-green-400 border border-gray-700 rounded-md')
 
-            # --- ФУНКЦИЯ ЗАПУСКА ГЕНЕРАЦИИ ---
             async def start_generation():
                 selected_tags = [item['hashtag'] for item in hashtags_data if item['is_active']]
                 
@@ -159,5 +155,53 @@ def main_page():
                     spinner.classes(add='hidden')
 
             generate_btn.on_click(start_generation)
+
+        # === Вкладка Дизайн и Темы ===
+        with ui.tab_panel(tab_themes):
+            with ui.row().classes('w-full gap-8 items-start'):
+                
+                # Блок сохранения
+                with ui.card().classes('w-96 shadow-sm'):
+                    ui.label('Сохранить текущий дизайн').classes('text-xl font-bold mb-4')
+                    ui.label('Создаст резервную копию папок templates и static.').classes('text-sm text-gray-500 mb-4')
+                    
+                    theme_name_input = ui.input(label='Название темы (на англ. без пробелов)').classes('w-full mb-4')
+                    
+                    def do_save_theme():
+                        success, msg = save_current_theme(theme_name_input.value)
+                        if success:
+                            ui.notify(msg, type='positive')
+                            theme_name_input.value = ''
+                            refresh_themes_dropdown()
+                        else:
+                            ui.notify(msg, type='negative')
+
+                    ui.button('Сохранить тему', on_click=do_save_theme).classes('w-full bg-green-600 text-white')
+
+                # Блок загрузки
+                with ui.card().classes('w-96 shadow-sm'):
+                    ui.label('Загрузить сохраненный дизайн').classes('text-xl font-bold mb-4')
+                    ui.label('ВНИМАНИЕ: Текущие файлы в templates и static будут перезаписаны!').classes('text-sm text-red-500 mb-4')
+                    
+                    theme_select = ui.select(options=get_themes(), label='Выберите тему').classes('w-full mb-4')
+                    
+                    def refresh_themes_dropdown():
+                        theme_select.options = get_themes()
+                        theme_select.update()
+
+                    def do_load_theme():
+                        if not theme_select.value:
+                            ui.notify('Выберите тему из списка!', type='warning')
+                            return
+                        
+                        success, msg = load_theme(theme_select.value)
+                        if success:
+                            ui.notify(msg, type='positive')
+                        else:
+                            ui.notify(msg, type='negative')
+
+                    ui.button('Загрузить тему', on_click=do_load_theme).classes('w-full bg-orange-500 text-white')
+                    
+                    ui.button('Обновить список тем', icon='refresh', on_click=refresh_themes_dropdown).props('flat').classes('w-full mt-2 text-gray-500')
 
 ui.run(title='HudClub Gallery Admin', reload=False)
