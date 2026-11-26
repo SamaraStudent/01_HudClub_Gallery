@@ -1,9 +1,10 @@
 import json
 from pathlib import Path
-import nicegui.ui as ui
+from nicegui import ui, run
 from config import HASHTAGS_JSON
+from core.generator import run_generation
 
-# --- 辅助函数 ---
+# Загрузка и сохранение
 def load_hashtags():
     if HASHTAGS_JSON.exists():
         with open(HASHTAGS_JSON, "r", encoding="utf-8") as f:
@@ -12,11 +13,28 @@ def load_hashtags():
 
 def save_hashtags(data):
     with open(HASHTAGS_JSON, "w", encoding="utf-8") as f:
-        # indent=2 делает файл красивым и читаемым
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-# 全局变量，存放从文件读取的数据
+# Вспомогательная функция для отрисовки иконки состояния
+def update_main_icon(m_btn, c_items):
+    act = sum(1 for i in c_items if i['is_active'])
+    if act == len(c_items) and act > 0:
+        m_btn.props('icon="check_box"') # Выбрано всё
+    elif act == 0:
+        m_btn.props('icon="check_box_outline_blank"') # Не выбрано ничего
+    else:
+        m_btn.props('icon="indeterminate_check_box"') # Выбрано частично
+
+# Глобальные данные
 hashtags_data = load_hashtags()
+
+CATEGORIES = [
+    ("Живопись", "Живопись"),
+    ("Рисунок", "Рисунок"),
+    ("Композиция", "Композиция"),
+    ("Декоративная живопись и композиция", "Декоративка"),
+    ("Пленэр", "Пленэр")
+]
 
 @ui.page('/')
 def main_page():
@@ -24,66 +42,125 @@ def main_page():
     
     with ui.tabs().classes('w-full') as tabs:
         tab_paths = ui.tab('Настройки путей', icon='settings')
-        tab_hashtags = ui.tab('Хештеги', icon='tag')
+        tab_hashtags = ui.tab('Хештеги и генерация', icon='tag')
         
     with ui.tab_panels(tabs, value=tab_hashtags).classes('w-full'):
         
-        # === Вкладка Пути (Пока пустышка) ===
+        # === Вкладка Пути ===
         with ui.tab_panel(tab_paths):
             with ui.card().classes('w-full'):
                 ui.label('Настройки путей (в разработке)').classes('text-lg')
 
-        # === Вкладка Хештеги ===
+        # === Вкладка Хештеги и Генерация ===
         with ui.tab_panel(tab_hashtags):
             
-            # Функция для обновления интерфейса (перерисовывает чекбоксы)
-            @ui.refreshable
-            def render_hashtags():
-                # Группируем данные по категориям
-                categories = {}
-                for idx, item in enumerate(hashtags_data):
-                    cat = item.get('category', 'Без категории')
-                    if cat not in categories:
-                        categories[cat] = []
-                    categories[cat].append((idx, item))
+            menu_refs = []
 
-                # Выводим каждую категорию
-                for cat_name, items in categories.items():
-                    with ui.expansion(cat_name, icon='folder').classes('w-full bg-gray-800 text-white mb-2'):
-                        with ui.column().classes('p-4 w-full gap-2'):
-                            for global_idx, item in items:
-                                # Создаем чекбокс и привязываем к функции сохранения
-                                ui.checkbox(
-                                    f"{item['hashtag']} — {item['description']}",
-                                    value=item['is_active'],
-                                    on_change=lambda e, i=global_idx: update_hashtag_state(i, e.value)
-                                ).classes('text-lg')
+            with ui.row().classes('w-full items-start justify-between gap-4 mb-6 flex-nowrap'):
+                for json_cat_name, display_name in CATEGORIES:
+                    cat_items = [item for item in hashtags_data if item.get('category') == json_cat_name]
+                    
+                    with ui.column().classes('flex-1 min-w-[180px] relative'):
+                        
+                        # 1. Заголовок
+                        with ui.row().classes('bg-gray-800 text-white p-2 rounded w-full items-center no-wrap cursor-pointer hover:bg-gray-700 transition') as header:
+                            
+                            # Вместо чекбокса используем кнопку с иконкой!
+                            main_btn = ui.button().props('flat dense color="cyan"').classes('p-0 min-h-0')
+                            update_main_icon(main_btn, cat_items)
+                            
+                            lbl = ui.label(display_name).classes('font-bold ml-2 flex-grow')
+                            icon = ui.icon('expand_more').classes('text-gray-400 transition-transform duration-200')
+                        
+                        # 2. Выпадающее меню
+                        with ui.menu().classes('p-0 shadow-xl border border-gray-300') as menu:
+                            menu_refs.append(menu)
+                            with ui.column().classes('p-2 max-h-[400px] overflow-y-auto gap-1 bg-white min-w-[200px]'):
+                                menu_cbs = []
+                                for item in cat_items:
+                                    cb = ui.checkbox(item['hashtag'], value=item['is_active'])
+                                    menu_cbs.append(cb)
+                                    
+                                    def on_child_change(e, it=item, m_btn=main_btn, c_items=cat_items):
+                                        it['is_active'] = e.value
+                                        save_hashtags(hashtags_data)
+                                        update_main_icon(m_btn, c_items)
 
-            # Логика обновления состояния одного хештега
-            def update_hashtag_state(idx, value):
-                hashtags_data[idx]['is_active'] = value
-                save_hashtags(hashtags_data)
+                                    cb.on_value_change(on_child_change)
 
-            # Кнопки глобального управления
-            def select_all():
-                for item in hashtags_data:
-                    item['is_active'] = True
-                save_hashtags(hashtags_data)
-                render_hashtags.refresh() # Перерисовываем только блок с чекбоксами
+                                # Клик по главной иконке (Выбрать всё / Снять всё)
+                                def on_main_click(m_btn=main_btn, c_items=cat_items, m_cbs=menu_cbs):
+                                    act = sum(1 for i in c_items if i['is_active'])
+                                    # Если выбрано всё - снимаем. Иначе - выбираем всё.
+                                    target_val = not (act == len(c_items) and act > 0)
+                                    
+                                    for it in c_items:
+                                        it['is_active'] = target_val
+                                    save_hashtags(hashtags_data)
+                                    for cb in m_cbs:
+                                        cb.value = target_val
+                                    
+                                    update_main_icon(m_btn, c_items)
+
+                                main_btn.on('click.stop', on_main_click)
+                        
+                        # 3. Анимация треугольника
+                        def on_menu_toggle(e, ic=icon):
+                            if e.value:
+                                ic.classes(add='rotate-180')
+                            else:
+                                ic.classes(remove='rotate-180')
+                        menu.on_value_change(on_menu_toggle)
+                        
+                        # 4. Открытие меню (с закрытием остальных)
+                        def open_menu(m=menu):
+                            for m_ref in menu_refs:
+                                if m_ref != m:
+                                    m_ref.close()
+                            m.open()
+                        
+                        header.on('click', open_menu)
+
+            # Нижняя панель с генерацией
+            with ui.row().classes('mb-4 gap-4 items-center mt-8'):
+                generate_btn = ui.button('Сгенерировать сайт', icon='play_arrow', color='blue').classes('font-bold px-6')
+                spinner = ui.spinner(size='lg', color='blue').classes('hidden')
+
+            ui.label('Лог выполнения:').classes('mt-2 font-bold text-gray-400')
+            log_area = ui.log(max_lines=100).classes('w-full h-48 font-mono text-sm bg-black text-green-400 border border-gray-600 rounded')
+
+            # --- ФУНКЦИЯ ЗАПУСКА ГЕНЕРАЦИИ ---
+            async def start_generation():
+                selected_tags = [item['hashtag'] for item in hashtags_data if item['is_active']]
                 
-            def deselect_all():
-                for item in hashtags_data:
-                    item['is_active'] = False
-                save_hashtags(hashtags_data)
-                render_hashtags.refresh()
+                if not selected_tags:
+                    ui.notify('Выберите хотя бы один хештег!', type='warning')
+                    return
+                
+                generate_btn.disable()
+                spinner.classes(remove='hidden')
+                log_area.clear()
+                log_area.push("Запуск генерации...")
+                
+                def gui_log(message):
+                    print(message)
+                    log_area.push(message)
+                
+                try:
+                    success = await run.io_bound(run_generation, selected_tags, gui_log)
+                    if success:
+                        log_area.push("\n✅ САЙТ УСПЕШНО СГЕНЕРИРОВАН!")
+                        ui.notify('Генерация завершена!', type='positive')
+                    else:
+                        log_area.push("\n❌ ОШИБКА ПРИ ГЕНЕРАЦИИ (см. лог)")
+                        ui.notify('Произошла ошибка, проверьте лог', type='negative')
+                except Exception as e:
+                    log_area.push(f"\n❌ КРИТИЧЕСКАЯ ОШИБКА: {str(e)}")
+                    ui.notify('Критическая ошибка!', type='negative')
+                finally:
+                    generate_btn.enable()
+                    spinner.classes(add='hidden')
 
-            # Блок с кнопками
-            with ui.row().classes('mb-6 gap-4'):
-                ui.button('Выбрать ВСЕ', on_click=select_all, color='green')
-                ui.button('Снять ВСЕ', on_click=deselect_all, color='red')
-                ui.button('Сохранить выбранное', on_click=lambda: ui.notify('Все изменения уже сохранены!', type='positive'), color='blue')
-
-            # Вызов функции отрисовки чекбоксов
-            render_hashtags()
+            generate_btn.on_click(start_generation)
 
 ui.run(title='HudClub Gallery Admin', reload=False)
