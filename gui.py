@@ -3,7 +3,7 @@ from pathlib import Path
 from nicegui import ui, run
 from config import HASHTAGS_JSON
 from core.generator import run_generation
-from core.theme_manager import get_themes, save_current_theme, load_theme
+from core.theme_manager import get_themes, save_current_theme, load_theme, undo_last_theme_load
 
 # Загрузка и сохранение
 def load_hashtags():
@@ -178,10 +178,10 @@ def main_page():
 
                     ui.button('Сохранить тему', on_click=do_save_theme).classes('w-full bg-green-600 text-white')
 
-                # Блок загрузки
+                # Блок загрузки и отмены
                 with ui.card().classes('w-96 shadow-sm'):
                     ui.label('Загрузить сохраненный дизайн').classes('text-xl font-bold mb-4')
-                    ui.label('ВНИМАНИЕ: Текущие файлы в templates и static будут перезаписаны!').classes('text-sm text-red-500 mb-4')
+                    ui.label('ВНИМАНИЕ: Текущий дизайн будет сохранен в 00_undo, а затем перезаписан!').classes('text-sm text-orange-500 mb-4')
                     
                     theme_select = ui.select(options=get_themes(), label='Выберите тему').classes('w-full mb-4')
                     
@@ -200,7 +200,18 @@ def main_page():
                         else:
                             ui.notify(msg, type='negative')
 
-                    ui.button('Загрузить тему', on_click=do_load_theme).classes('w-full bg-orange-500 text-white')
+                    def do_undo():
+                        success, msg = undo_last_theme_load()
+                        if success:
+                            ui.notify(msg, type='positive')
+                            refresh_themes_dropdown()
+                        else:
+                            ui.notify(msg, type='warning')
+
+                    ui.button('Загрузить тему', on_click=do_load_theme).classes('w-full bg-blue-500 text-white')
+                    
+                    # --- Кнопка ОТМЕНЫ ---
+                    ui.button('Отменить загрузку (Undo)', on_click=do_undo).classes('w-full bg-red-500 text-white mt-2')
                     
                     ui.button('Обновить список тем', icon='refresh', on_click=refresh_themes_dropdown).props('flat').classes('w-full mt-2 text-gray-500')
 

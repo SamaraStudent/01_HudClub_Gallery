@@ -1,6 +1,7 @@
 from jinja2 import Environment, FileSystemLoader
+from pathlib import Path
 
-# Настраиваем Jinja2
+# Указываем папку с шаблонами
 env = Environment(loader=FileSystemLoader('templates'))
 
 def make_nav_buttons(all_active: bool, list_active: bool) -> str:
@@ -17,7 +18,8 @@ def make_nav_buttons(all_active: bool, list_active: bool) -> str:
 
     return all_btn + list_btn
 
-def render_index(main_users, unknown_users, new_count_by_user, new_reviews, title_suffix):
+def render_index(main_users, unknown_users, new_count_by_user, new_reviews, title_suffix, grouped_hashtags):
+    """Рендерит страницу со списком участников (index.html)"""
     template = env.get_template('index.html')
     return template.render(
         title="Список авторов",
@@ -26,24 +28,31 @@ def render_index(main_users, unknown_users, new_count_by_user, new_reviews, titl
         unknown_users=unknown_users,
         new_count_by_user=new_count_by_user,
         new_reviews=new_reviews,
-        title_suffix=title_suffix
+        title_suffix=title_suffix,
+        grouped_hashtags=grouped_hashtags
     )
 
-def render_all_photos(all_to_gen, target_hashtags, new_reviews, title_suffix):
+def render_all_photos(all_to_gen, target_hashtags, new_reviews, title_suffix, grouped_hashtags):
+    """Рендерит страницу 'Общая выставка' (all_photos.html)"""
     template = env.get_template('all_photos.html')
     return template.render(
+        title="Общая выставка",
         nav_buttons=make_nav_buttons(all_active=True, list_active=False),
         all_to_gen=all_to_gen,
         target_hashtags=target_hashtags,
         new_reviews=new_reviews,
-        title_suffix=title_suffix
+        title_suffix=title_suffix,
+        grouped_hashtags=grouped_hashtags
     )
 
-def render_user(user, target_hashtags, new_reviews):
+def render_user(user, target_hashtags, new_reviews, grouped_hashtags):
+    """Рендерит персональную страницу автора (user.html)"""
     template = env.get_template('user.html')
     return template.render(
+        title=f"{user['list_number']}. {user['name']}",
         nav_buttons=make_nav_buttons(all_active=False, list_active=False),
         user=user,
         target_hashtags=target_hashtags,
-        new_reviews=new_reviews
+        new_reviews=new_reviews,
+        grouped_hashtags=grouped_hashtags
     )

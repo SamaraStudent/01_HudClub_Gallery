@@ -1,7 +1,7 @@
 import shutil
 import json
 from pathlib import Path
-from config import IMG_DIR_NAME, SPISOK_JSON, CHATS_ROOT, WWW_ROOT
+from config import IMG_DIR_NAME, SPISOK_JSON, CHATS_ROOT, WWW_ROOT, HASHTAGS_JSON
 from core.utils import safe_id, get_russian_date, esc
 from core.collector import collect_user_data
 from core import renderer
@@ -22,7 +22,22 @@ def run_generation(target_hashtags, log_func=print):
 
     target_hashtags_set = set(target_hashtags)
     
-    # Пока оставим новые задания пустыми
+    # --- НОВЫЙ БЛОК: Группировка выбранных тегов по категориям ---
+    grouped_hashtags = {}
+    if HASHTAGS_JSON.exists():
+        with open(HASHTAGS_JSON, "r", encoding="utf-8") as f:
+            all_hashtags = json.load(f)
+            
+        for item in all_hashtags:
+            # Берем только те теги, которые пользователь выбрал в редакторе
+            if item.get('hashtag') in target_hashtags_set:
+                cat = item.get('category', 'Разное')
+                if cat not in grouped_hashtags:
+                    grouped_hashtags[cat] = []
+                grouped_hashtags[cat].append(item['hashtag'])
+    # -------------------------------------------------------------
+
+    # Пока оставим новые задания пустыми (мы сделаем их чуть позже)
     new_reviews = []
     new_review_map = {}
 
@@ -70,8 +85,8 @@ def run_generation(target_hashtags, log_func=print):
     
     title_suffix = f" {esc(get_russian_date())} {' '.join(esc(t) for t in target_hashtags)}"
 
-    # Рендеринг
-    index_html = renderer.render_index(main_users, unknown_users, new_count_by_user, new_reviews, title_suffix)
+    # Рендеринг главной страницы (Передаем grouped_hashtags)
+    index_html = renderer.render_index(main_users, unknown_users, new_count_by_user, new_reviews, title_suffix, grouped_hashtags)
     with open(output_dir / "index.html", "w", encoding="utf-8") as f:
         f.write(index_html)
 
@@ -99,12 +114,14 @@ def run_generation(target_hashtags, log_func=print):
                 "caption": caption
             })
 
-    all_html = renderer.render_all_photos(all_to_gen, target_hashtags, new_reviews, title_suffix)
+    # Рендеринг общей выставки (Передаем grouped_hashtags)
+    all_html = renderer.render_all_photos(all_to_gen, target_hashtags, new_reviews, title_suffix, grouped_hashtags)
     with open(output_dir / "all_photos.html", "w", encoding="utf-8") as f:
         f.write(all_html)
 
+    # Рендеринг страниц пользователей (Передаем grouped_hashtags)
     for u in all_to_gen:
-        u_html = renderer.render_user(u, target_hashtags, new_reviews)
+        u_html = renderer.render_user(u, target_hashtags, new_reviews, grouped_hashtags)
         with open(output_dir / f"user_{safe_id(str(u['from_id']))}.html", "w", encoding="utf-8") as f:
             f.write(u_html)
 
