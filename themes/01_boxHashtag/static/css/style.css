@@ -1,0 +1,169 @@
+        :root { --thumb-size: 450px; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0a0a0a; color: #ddd; margin: 0; padding: 0; }
+        body.review-active { overflow: hidden; }
+        body.review-active .header-nav { display: none !important; }
+        .container { width: 98%; max-width: 1600px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
+        .header-nav {
+            position: sticky; top: 0; background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(10px); border-bottom: 1px solid #333;
+            z-index: 1000; padding: 15px 0; text-align: center;
+            display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-block; color: #fff; text-decoration: none; background: #222;
+            padding: 10px 22px; border-radius: 30px; margin: 0 3px; font-weight: 500;
+            border: 1px solid #444; transition: all 0.1s ease; font-size: 14px; cursor: pointer;
+        }
+        .btn:hover { background: #00d4ff; border-color: #00d4ff; color: #000; }
+        .btn-active { background: #ffcc00; color: #000; border: none; }
+        .btn-review { background: #8b0000; border-color: #ff4444; }
+        .btn-review:hover { background: #ff0000; border-color: #ff0000; }
+        .btn-review.active { background: #ffcc00; color: #000; border-color: #ffcc00; }
+
+        .size-control { display: flex; align-items: center; gap: 10px; background: #222; padding: 5px 15px; border-radius: 30px; border: 1px solid #444; color: #fff; font-size: 12px; }
+        .size-control input { cursor: pointer; width: 100px; }
+
+        h1 { text-align: center; margin-top: 30px; color: #fff; font-weight: 300; }
+        h2 { color: #ffcc00; border-left: 4px solid #ffcc00; padding-left: 15px; margin: 40px 0 15px 0; font-size: 1.3rem; clear: both; }
+
+        .user-list { list-style: none; padding: 0; margin-top: 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+        .user-item { background: #161616; border-radius: 12px; border: 1px solid #222; transition: 0.1s; }
+        .user-item:hover { background: #222; border-color: #00d4ff; transform: translateX(5px); }
+        .user-link { display: flex; align-items: center; padding: 15px 20px; color: #00d4ff; text-decoration: none; font-size: 1.1rem; }
+        .list-num { background: #ffcc00; color: #000; font-weight: bold; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 15px; flex-shrink: 0; }
+        .new-count { color: #fff; font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 10px; margin-left: 10px; }
+
+        .gallery { display: grid !important; grid-template-columns: repeat(auto-fit, var(--thumb-size)) !important; justify-content: center !important; gap: 15px !important; margin-bottom: 30px; width: 100%; }
+        .gallery-item { position: relative; border-radius: 10px; overflow: hidden; border: 1px solid #222; background: #000; display: flex; flex-direction: column; }
+        .gallery-item img { width: 100%; height: auto; display: block; cursor: pointer; transition: 0.2s; }
+        .gallery-item:hover img { transform: scale(1.03); }
+
+        .tag-badge { background: #111; color: #ffcc00; padding: 8px 10px; font-size: 12px; font-weight: bold; border-top: 1px solid #333; text-align: center; }
+        .new-badge { color: #fff; padding: 6px 10px; font-size: 11px; font-weight: bold; text-align: center; letter-spacing: 0.5px; }
+
+        /* === Кнопки фильтров === */
+        .tag-filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .filter-btn {
+            color: #000; border: none;
+            padding: 8px 16px; border-radius: 30px; cursor: pointer;
+            font-weight: 600; font-size: 13px; transition: 0.15s;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.15);
+        }
+        .filter-btn:hover { filter: brightness(1.15); }
+        .filter-btn.off {
+            background: #3a3a3a !important;
+            color: #777 !important;
+            box-shadow: none;
+            text-decoration: line-through;
+        }
+        .filter-btn.off:hover { background: #4a4a4a !important; color: #999 !important; }
+        .filter-btn[data-filter-type="new"] { color: #fff; }
+
+        .author-block { margin-bottom: 30px; }
+
+        #review-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 99999; display: none; cursor: none; touch-action: none; background: transparent !important; pointer-events: none; }
+        #review-canvas.active { display: block !important; pointer-events: auto; }
+
+        #brush-cursor {
+            position: fixed; z-index: 100002; pointer-events: none; display: none;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-sizing: border-box;
+        }
+        #brush-cursor.visible { display: block; }
+        #brush-cursor.mode-brush {
+            border: 2px solid currentColor;
+            background: rgba(255,255,255,0.15);
+        }
+        #brush-cursor.mode-eraser {
+            border: 2px dashed #ffffff;
+            background: transparent;
+        }
+
+        #review-tools {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            z-index: 100000; background: rgba(0,0,0,0.9); padding: 10px 25px;
+            border-radius: 50px; display: none; gap: 12px; align-items: center;
+            border: 2px solid #ffcc00; flex-wrap: wrap; justify-content: center; max-width: 95vw;
+        }
+        .btn-clear { background: #444; color: #fff; border: none; padding: 6px 14px; border-radius: 20px; font-size: 12px; cursor: pointer; }
+        .btn-clear:hover { background: #666; }
+        .btn-exit { background: #8b0000; }
+        .btn-exit:hover { background: #ff0000; }
+
+        .btn-color { width: 34px; height: 34px; border-radius: 50%; background: #f00; border: 2px solid #fff; cursor: pointer; padding: 0; }
+        .btn-color:hover { transform: scale(1.1); }
+
+        .btn-eraser {
+            min-width: 34px; height: 34px; border-radius: 20px;
+            background: #222; border: 2px solid #888; cursor: pointer;
+            padding: 0 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 13px; color: #ddd; font-weight: 600;
+            transition: all 0.15s;
+        }
+        .btn-eraser:hover { background: #444; border-color: #aaa; color: #fff; }
+        .btn-eraser.active {
+            background: #ffcc00;
+            border-color: #fff;
+            color: #000;
+            box-shadow: 0 0 0 2px #ffcc00, 0 0 12px rgba(255,204,0,0.7);
+        }
+
+        .eraser-size-control { display: flex; align-items: center; gap: 8px; color: #ffcc00; font-size: 11px; }
+        .eraser-size-control input { width: 90px; cursor: pointer; }
+
+        #palette-panel { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); z-index: 100001; background: rgba(0,0,0,0.95); padding: 12px; border-radius: 12px; display: none; border: 2px solid #ffcc00; }
+        #palette-panel.open { display: block; }
+
+        .palette { display: grid; grid-template-columns: repeat(10, 26px); grid-auto-rows: 26px; gap: 3px; }
+        .swatch { width: 26px; height: 26px; border-radius: 4px; border: 2px solid transparent; cursor: pointer; transition: 0.1s; box-sizing: border-box; }
+        .swatch:hover { transform: scale(1.15); border-color: #fff; z-index: 2; }
+        .swatch.active { border-color: #fff; box-shadow: 0 0 0 2px #ffcc00, 0 0 10px rgba(255,204,0,0.8); transform: scale(1.1); }
+
+        /* Кнопка «Список» внутри Fancybox */
+        .btn-list-fancy {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100050;
+            display: none;
+            background: rgba(20,20,20,0.9);
+            border: 2px solid #ffcc00;
+            color: #ffcc00;
+            font-weight: 600;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.15s;
+        }
+        .btn-list-fancy:hover { background: #ffcc00; color: #000; }
+        body.fancybox-open .btn-list-fancy { display: inline-block; }
+
+        @media (max-width: 700px) {
+            .palette { grid-template-columns: repeat(10, 18px); grid-auto-rows: 18px; }
+            .swatch { width: 18px; height: 18px; }
+        }
+
+/* === НОВЫЕ ВЫПАДАЮЩИЕ ФИЛЬТРЫ === */
+.tag-filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.filter-dropdown { display: inline-block; position: relative; }
+.filter-summary {
+    background: #222; color: #fff; padding: 8px 16px; border-radius: 30px;
+    cursor: pointer; font-size: 13px; font-weight: 600; border: 1px solid #444;
+    list-style: none; user-select: none; transition: 0.15s;
+}
+.filter-summary::-webkit-details-marker { display: none; }
+.filter-summary:hover { background: #333; border-color: #666; }
+.filter-dropdown[open] .filter-summary { background: #00d4ff; color: #000; border-color: #00d4ff; }
+.filter-dropdown-content {
+    position: absolute; top: 110%; left: 0; background: #1a1a1a;
+    border: 1px solid #444; border-radius: 8px; padding: 10px; z-index: 1000;
+    min-width: 200px; max-height: 350px; overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5); display: flex; flex-direction: column; gap: 8px;
+}
+.filter-checkbox-label { display: flex; align-items: center; gap: 8px; color: #ddd; font-size: 13px; cursor: pointer; padding: 4px 8px; border-radius: 4px; margin: 0; }
+.filter-checkbox-label:hover { background: #2a2a2a; }
+.filter-checkbox { width: 16px; height: 16px; cursor: pointer; }
+.reset-btn { background: #8b0000 !important; border-color: #ff4444 !important; }
+.reset-btn:hover { background: #ff0000 !important; }
+.new-filter { background: #222; padding: 8px 16px; border-radius: 30px; border: 1px solid #444; }

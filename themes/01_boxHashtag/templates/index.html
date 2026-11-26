@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Список авторов{% endblock %}
+{% block content %}
+<h1>Список участников {{ title_suffix }}</h1>
+<ul class='user-list'>
+    {% for u in main_users %}
+    <li class="user-item">
+        <a class="user-link" href="user_{{ u.from_id }}.html">
+            <span class="list-num">{{ u.list_number }}</span>
+            {{ u.name }}
+            {% if u.from_id in new_count_by_user %}
+                {% for idx, cnt in new_count_by_user[u.from_id].items() %}
+                <span class="new-count" style="background:{{ new_reviews[idx].color }}">🆕 {{ cnt }}</span>
+                {% endfor %}
+            {% endif %}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% if unknown_users %}
+<h2>Новые участники</h2>
+<ul class='user-list'>
+    {% for u in unknown_users %}
+    <li class="user-item">
+        <a class="user-link" href="user_{{ u.from_id }}.html">
+            <span class="list-num">?</span>
+            {{ u.name }}
+            {% if u.from_id in new_count_by_user %}
+                {% for idx, cnt in new_count_by_user[u.from_id].items() %}
+                <span class="new-count" style="background:{{ new_reviews[idx].color }}">🆕 {{ cnt }}</span>
+                {% endfor %}
+            {% endif %}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

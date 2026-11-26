@@ -17,13 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function applyFilters() {
         galleryItems.forEach(item => {
             const tags = (item.dataset.tags || '').split(/\s+/).filter(Boolean);
-            const itemNewIdx = item.dataset.new; // ID "нового" задания (если есть)
+            const itemNewIdx = item.dataset.new; // ID "нового" задания
 
-            // 1. Проверяем совпадение по хештегам
-            // Элемент виден, если выбран ХОТЯ БЫ ОДИН из его тегов
+            // 1. Проверяем совпадение по хештегам (элемент виден, если выбран хотя бы один тег)
             let tagMatch = tags.some(tag => {
                 const cb = document.querySelector(`.filter-checkbox[value="${tag}"]`);
-                return cb ? cb.checked : true; // Если чекбокса нет на странице, не скрываем
+                return cb ? cb.checked : true;
             });
 
             // 2. Проверяем фильтр "Новые"
@@ -35,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // Итоговое решение: скрываем или показываем
+            // Итоговое решение
             const isVisible = tagMatch && newMatch;
             item.style.display = isVisible ? '' : 'none';
         });
@@ -48,16 +47,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Сохраняем новое состояние
         const newState = {};
-        checkboxes.forEach(cb => { newState[cb.value] = cb.checked; });
+        checkboxes.forEach(cb => { newState[cb.value] = cb.state || cb.checked; });
         localStorage.setItem('filterState_v2', JSON.stringify(newState));
     }
 
-    // Слушаем клики по чекбоксам
     checkboxes.forEach(cb => {
         cb.addEventListener('change', applyFilters);
     });
 
-    // Кнопка "Сбросить всё"
     if (resetBtn) {
         resetBtn.addEventListener('click', () => {
             checkboxes.forEach(cb => { cb.checked = true; });
@@ -65,6 +62,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Применяем фильтры при первой загрузке страницы
     applyFilters();
 });

@@ -1,0 +1,27 @@
+<div class="tag-filters">
+    <!-- Кнопка сброса всех фильтров -->
+    <button class="filter-btn reset-btn" id="resetFiltersBtn" title="Показать все работы">🔄 Сбросить всё</button>
+
+    <!-- Выпадающие списки по категориям -->
+    {% for category, tags in grouped_hashtags.items() %}
+    <details class="filter-dropdown">
+        <summary class="filter-summary">{{ category }}</summary>
+        <div class="filter-dropdown-content">
+            {% for tag in tags %}
+            <label class="filter-checkbox-label">
+                <input type="checkbox" class="filter-checkbox" value="{{ tag }}" checked>
+                {{ tag }}
+            </label>
+            {% endfor %}
+        </div>
+    </details>
+    {% endfor %}
+
+    <!-- Фильтры "Новые" (если они есть) -->
+    {% for r in new_reviews %}
+    <label class="filter-checkbox-label new-filter">
+        <input type="checkbox" class="filter-checkbox new-checkbox" value="new_{{ loop.index0 }}" style="accent-color: {{ r.color }};" checked>
+        🆕 Новые {{ loop.index }}
+    </label>
+    {% endfor %}
+</div>
