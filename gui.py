@@ -38,17 +38,17 @@ CATEGORIES = [
 
 @ui.page('/')
 def main_page():
-    ui.label('HudClub Gallery Admin').classes('text-3xl font-bold mb-6 text-blue-400')
+    ui.label('HudClub Gallery Admin').classes('text-4xl font-bold mb-8 text-blue-500')
     
-    with ui.tabs().classes('w-full') as tabs:
+    with ui.tabs().classes('w-full border-b border-gray-300') as tabs:
         tab_paths = ui.tab('Настройки путей', icon='settings')
         tab_hashtags = ui.tab('Хештеги и генерация', icon='tag')
         
-    with ui.tab_panels(tabs, value=tab_hashtags).classes('w-full'):
+    with ui.tab_panels(tabs, value=tab_hashtags).classes('w-full pt-4'):
         
         # === Вкладка Пути ===
         with ui.tab_panel(tab_paths):
-            with ui.card().classes('w-full'):
+            with ui.card().classes('w-full shadow-sm'):
                 ui.label('Настройки путей (в разработке)').classes('text-lg')
 
         # === Вкладка Хештеги и Генерация ===
@@ -56,26 +56,26 @@ def main_page():
             
             menu_refs = []
 
-            with ui.row().classes('w-full items-start justify-between gap-4 mb-6 flex-nowrap'):
+            # Ряд с кнопками-списками
+            with ui.row().classes('w-full items-start justify-start gap-4 mb-8 flex-nowrap'):
                 for json_cat_name, display_name in CATEGORIES:
                     cat_items = [item for item in hashtags_data if item.get('category') == json_cat_name]
                     
-                    with ui.column().classes('flex-1 min-w-[180px] relative'):
+                    with ui.column().classes('w-64 shrink-0 relative'):
                         
-                        # 1. Заголовок
-                        with ui.row().classes('bg-gray-800 text-white p-2 rounded w-full items-center no-wrap cursor-pointer hover:bg-gray-700 transition') as header:
+                        # 1. Шапка списка
+                        with ui.row().classes('bg-blue-500 text-white p-2 rounded-md w-full items-center no-wrap cursor-pointer hover:bg-blue-600 transition-colors') as header:
                             
-                            # Вместо чекбокса используем кнопку с иконкой!
-                            main_btn = ui.button().props('flat dense color="cyan"').classes('p-0 min-h-0')
+                            main_btn = ui.button().props('flat dense color="white"').classes('p-0 min-h-0')
                             update_main_icon(main_btn, cat_items)
                             
                             lbl = ui.label(display_name).classes('font-bold ml-2 flex-grow')
-                            icon = ui.icon('expand_more').classes('text-gray-400 transition-transform duration-200')
+                            icon = ui.icon('expand_more').classes('text-white/80 transition-transform duration-200')
                         
-                        # 2. Выпадающее меню
-                        with ui.menu().classes('p-0 shadow-xl border border-gray-300') as menu:
+                        # 2. Выпадающее меню (сделали ширину w-64, как у шапки)
+                        with ui.menu().classes('p-0 w-64 shadow-lg border border-gray-200 rounded-md') as menu:
                             menu_refs.append(menu)
-                            with ui.column().classes('p-2 max-h-[400px] overflow-y-auto gap-1 bg-white min-w-[200px]'):
+                            with ui.column().classes('p-2 max-h-[400px] overflow-y-auto gap-1 bg-white w-full'):
                                 menu_cbs = []
                                 for item in cat_items:
                                     cb = ui.checkbox(item['hashtag'], value=item['is_active'])
@@ -88,10 +88,8 @@ def main_page():
 
                                     cb.on_value_change(on_child_change)
 
-                                # Клик по главной иконке (Выбрать всё / Снять всё)
                                 def on_main_click(m_btn=main_btn, c_items=cat_items, m_cbs=menu_cbs):
                                     act = sum(1 for i in c_items if i['is_active'])
-                                    # Если выбрано всё - снимаем. Иначе - выбираем всё.
                                     target_val = not (act == len(c_items) and act > 0)
                                     
                                     for it in c_items:
@@ -104,7 +102,6 @@ def main_page():
 
                                 main_btn.on('click.stop', on_main_click)
                         
-                        # 3. Анимация треугольника
                         def on_menu_toggle(e, ic=icon):
                             if e.value:
                                 ic.classes(add='rotate-180')
@@ -112,7 +109,6 @@ def main_page():
                                 ic.classes(remove='rotate-180')
                         menu.on_value_change(on_menu_toggle)
                         
-                        # 4. Открытие меню (с закрытием остальных)
                         def open_menu(m=menu):
                             for m_ref in menu_refs:
                                 if m_ref != m:
@@ -121,13 +117,14 @@ def main_page():
                         
                         header.on('click', open_menu)
 
-            # Нижняя панель с генерацией
-            with ui.row().classes('mb-4 gap-4 items-center mt-8'):
-                generate_btn = ui.button('Сгенерировать сайт', icon='play_arrow', color='blue').classes('font-bold px-6')
+            # Нижняя панель с генерацией (сделали кнопку в точности как шапки)
+            with ui.row().classes('mb-4 gap-4 items-center'):
+                # Убрали color='blue' и добавили классы bg-blue-500, rounded-md, transition-colors
+                generate_btn = ui.button('Сгенерировать сайт', icon='play_arrow').classes('bg-blue-500 text-white font-bold px-6 py-2 rounded-md hover:bg-blue-600 transition-colors shadow-none')
                 spinner = ui.spinner(size='lg', color='blue').classes('hidden')
 
-            ui.label('Лог выполнения:').classes('mt-2 font-bold text-gray-400')
-            log_area = ui.log(max_lines=100).classes('w-full h-48 font-mono text-sm bg-black text-green-400 border border-gray-600 rounded')
+            ui.label('Лог выполнения:').classes('mt-2 font-bold text-gray-500')
+            log_area = ui.log(max_lines=100).classes('w-full h-48 font-mono text-sm bg-gray-900 text-green-400 border border-gray-700 rounded-md')
 
             # --- ФУНКЦИЯ ЗАПУСКА ГЕНЕРАЦИИ ---
             async def start_generation():
