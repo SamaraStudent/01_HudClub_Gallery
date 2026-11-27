@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Галерея{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <header class="header-nav">
+        {{ nav_buttons | safe }}
+        {% block filters %}{% endblock %}
+        <div class="size-control" title="Размер превью">
+            <span>Размер</span>
+            <input type="range" id="sizeSlider" min="160" max="900" value="320" step="10">
+        </div>
+        <button id="reviewToggleBtn" class="btn btn-review" title="Режим разбора">✏️ Разбор</button>
+    </header>
+
+    <canvas id="review-canvas"></canvas>
+    <div id="brush-cursor"></div>
+    <div id="review-tools">
+        <button class="btn-color" id="colorPickerBtn" title="Палитра"></button>
+        <button class="btn-eraser" id="eraserBtn" title="Ластик">Стереть</button>
+        <div class="eraser-size-control">
+            <span>⌀</span>
+            <input type="range" id="toolSize" min="2" max="50" value="10">
+        </div>
+        <button class="btn-tool" onclick="saveCanvas()">Сохранить</button>
+        <button class="btn-tool" onclick="clearCanvasConfirm()">Очистить</button>
+        <button class="btn-tool btn-exit" onclick="toggleReview()">Выйти</button>
+    </div>
+    <div id="palette-panel"><div class="palette" id="palette"></div></div>
+
+    <a href="index.html" id="fancy-list-btn" class="btn-list-fancy">📋 Список</a>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    <script src="static/js/size_slider.js"></script>
+    <script src="static/js/review.js"></script>
+    <script src="static/js/filters.js"></script>
+</body>
+</html>

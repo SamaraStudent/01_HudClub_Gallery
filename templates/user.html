@@ -2,7 +2,12 @@
 {% block title %}{{ user.name }}{% endblock %}
 {% block filters %}{% include 'partials/filters.html' %}{% endblock %}
 {% block content %}
-<h1>{{ user.list_number }}. {{ user.name }}</h1>
+<div class="page-header">
+    <h1>
+        <span class="list-num-inline">{{ user.list_number }}</span>
+        {{ user.name }}
+    </h1>
+</div>
 <div class="gallery">
     {% for img in user.photos %}
         {% with fancybox_group="user_" + user.from_id %}

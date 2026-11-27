@@ -1,66 +1,130 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const checkboxes = document.querySelectorAll('.filter-checkbox');
-    const resetBtn = document.getElementById('resetFiltersBtn');
-    const galleryItems = document.querySelectorAll('.gallery-item');
-    const authorBlocks = document.querySelectorAll('.author-block');
+    const root = document.getElementById('tagFilters');
+    if (!root) return;
 
-    // Загрузка сохраненного состояния из памяти браузера
-    const savedState = JSON.parse(localStorage.getItem('filterState_v2') || '{}');
+    const checkboxes = root.querySelectorAll('.filter-checkbox');
+    const groups = root.querySelectorAll('.filter-group');
+    const STORAGE_KEY = 'filterState_modern_v1';
 
-    // Применяем сохраненное состояние к чекбоксам при загрузке
+    let saved = {};
+    try {
+        saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    } catch (e) {}
+
     checkboxes.forEach(cb => {
-        if (savedState.hasOwnProperty(cb.value)) {
-            cb.checked = savedState[cb.value];
+        if (Object.prototype.hasOwnProperty.call(saved, cb.value)) {
+            cb.checked = !!saved[cb.value];
+        }
+    });
+
+    groups.forEach(group => {
+        group.addEventListener('toggle', () => {
+            if (group.open) {
+                groups.forEach(other => {
+                    if (other !== group && other.open) other.open = false;
+                });
+            }
+        });
+
+        const master = group.querySelector('.group-master-cb');
+        if (master) {
+            master.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const boxes = [...group.querySelectorAll('.filter-checkbox')];
+                const allOn = boxes.length > 0 && boxes.every(b => b.checked);
+                boxes.forEach(b => { b.checked = !allOn; });
+                applyFilters();
+            });
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!root.contains(e.target)) {
+            groups.forEach(g => { g.open = false; });
         }
     });
 
     function applyFilters() {
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const authorBlocks = document.querySelectorAll('.author-block');
+
+        const activeTags = new Set();
+        const activeNews = new Set();
+        let anyTagFilterExists = false;
+
+        checkboxes.forEach(cb => {
+            if (cb.classList.contains('new-checkbox')) {
+                if (cb.checked) activeNews.add(cb.value);
+            } else {
+                anyTagFilterExists = true;
+                if (cb.checked) activeTags.add(cb.value);
+            }
+        });
+
+        const hasActiveTagFilter = activeTags.size > 0;
+        const hasNewCheckboxes = root.querySelectorAll('.new-checkbox').length > 0;
+
         galleryItems.forEach(item => {
             const tags = (item.dataset.tags || '').split(/\s+/).filter(Boolean);
-            const itemNewIdx = item.dataset.new; // ID "нового" задания
+            const newIdx = item.dataset.new;
 
-            // 1. Проверяем совпадение по хештегам (элемент виден, если выбран хотя бы один тег)
-            let tagMatch = tags.some(tag => {
-                const cb = document.querySelector(`.filter-checkbox[value="${tag}"]`);
-                return cb ? cb.checked : true;
-            });
-
-            // 2. Проверяем фильтр "Новые"
-            let newMatch = true;
-            if (itemNewIdx !== undefined && itemNewIdx !== "") {
-                const newCb = document.querySelector(`.filter-checkbox[value="new_${itemNewIdx}"]`);
-                if (newCb && !newCb.checked) {
-                    newMatch = false;
+            let tagOk = true;
+            if (anyTagFilterExists) {
+                if (!hasActiveTagFilter) {
+                    tagOk = false;
+                } else if (tags.length === 0) {
+                    tagOk = true;
+                } else {
+                    tagOk = tags.some(t => activeTags.has(t));
                 }
             }
 
-            // Итоговое решение
-            const isVisible = tagMatch && newMatch;
-            item.style.display = isVisible ? '' : 'none';
+            let newOk = true;
+            if (newIdx !== undefined && newIdx !== '' && hasNewCheckboxes) {
+                newOk = activeNews.has('new_' + newIdx);
+            }
+
+            item.style.display = (tagOk && newOk) ? '' : 'none';
         });
 
-        // Скрываем блоки авторов, у которых не осталось видимых картинок
         authorBlocks.forEach(block => {
-            const hasVisible = [...block.querySelectorAll('.gallery-item')].some(c => c.style.display !== 'none');
-            block.style.display = hasVisible ? '' : 'none';
+            const visible = [...block.querySelectorAll('.gallery-item')]
+                .some(el => el.style.display !== 'none');
+            block.style.display = visible ? '' : 'none';
         });
 
-        // Сохраняем новое состояние
-        const newState = {};
-        checkboxes.forEach(cb => { newState[cb.value] = cb.state || cb.checked; });
-        localStorage.setItem('filterState_v2', JSON.stringify(newState));
+        const state = {};
+        checkboxes.forEach(cb => { state[cb.value] = cb.checked; });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+
+        updateGroupCounts();
     }
 
-    checkboxes.forEach(cb => {
-        cb.addEventListener('change', applyFilters);
-    });
-
-    if (resetBtn) {
-        resetBtn.addEventListener('click', () => {
-            checkboxes.forEach(cb => { cb.checked = true; });
-            applyFilters();
+    function updateGroupCounts() {
+        groups.forEach(group => {
+            const boxes = [...group.querySelectorAll('.filter-checkbox')];
+            const checked = boxes.filter(b => b.checked).length;
+            const badge = group.querySelector('.filter-count');
+            if (badge) {
+                badge.textContent = checked + '/' + boxes.length;
+                badge.classList.toggle('partial', checked !== boxes.length);
+                badge.classList.toggle('none', checked === 0);
+            }
+            const master = group.querySelector('.group-master-cb');
+            if (master) {
+                let state = 'none';
+                if (boxes.length > 0 && checked === boxes.length) state = 'all';
+                else if (checked > 0) state = 'partial';
+                master.dataset.state = state;
+                master.title = state === 'partial'
+                    ? 'Выбрано частично'
+                    : (state === 'all' ? 'Выбрано всё' : 'Не выбрано ничего');
+                master.setAttribute('aria-label', master.title);
+            }
         });
     }
 
+    checkboxes.forEach(cb => cb.addEventListener('change', applyFilters));
     applyFilters();
 });

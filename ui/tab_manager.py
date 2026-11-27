@@ -1,3 +1,4 @@
+import csv
 import json
 from datetime import datetime
 from nicegui import ui
@@ -8,6 +9,42 @@ CATEGORIES = ["Живопись", "Рисунок", "Композиция", "Д�
 def render_tab():
     # Храним ID хештега, который сейчас редактируем. Если None - добавляем новый.
     editing_id = None
+    
+    def export_to_csv():
+        """Экспорт данных в CSV файл"""
+        try:
+            current_data = load_hashtags()
+            # Сортировка по убыванию ID (новые сверху)
+            sorted_data = sorted(current_data, key=lambda x: x.get('id', 0), reverse=True)
+            
+            # Определяем путь для CSV файла
+            import os
+            csv_path = os.path.join('exports', 'hashtags_export.csv')
+            
+            # Создаем директорию, если её нет
+            os.makedirs('exports', exist_ok=True)
+            
+            # Записываем данные в CSV
+            with open(csv_path, 'w', newline='', encoding='utf-8') as csvfile:
+                fieldnames = ['id', 'hashtag', 'category', 'description', 'first_seen_date', 'telegram', 'boosty']
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+                
+                writer.writeheader()
+                for h in sorted_data:
+                    links = h.get('links', {})
+                    writer.writerow({
+                        'id': h.get('id'),
+                        'hashtag': h.get('hashtag'),
+                        'category': h.get('category'),
+                        'description': h.get('description'),
+                        'first_seen_date': h.get('first_seen_date'),
+                        'telegram': links.get('telegram', ''),
+                        'boosty': links.get('boosty', '')
+                    })
+            
+            ui.notify(f'Экспорт завершен! Файл сохранен в: {csv_path}', type='positive')
+        except Exception as e:
+            ui.notify(f'Ошибка экспорта: {str(e)}', type='negative')
 
     # Функция для сброса формы в режим "Добавления"
     def reset_form():
@@ -182,6 +219,8 @@ def render_tab():
         with ui.card().classes('flex-grow shadow-sm overflow-hidden'):
             with ui.row().classes('w-full justify-between items-center mb-4'):
                 ui.label('Существующие хештеги').classes('text-xl font-bold')
-                ui.button(icon='refresh', on_click=lambda: table_area.refresh()).props('flat')
+                with ui.row().classes('gap-2'):
+                    ui.button(icon='refresh', on_click=lambda: table_area.refresh()).props('flat')
+                    ui.button('Экспорт в CSV', on_click=export_to_csv).props('flat')
             
             table_area()

@@ -1,0 +1,494 @@
+[
+  {
+    "id": 1,
+    "hashtag": "#домашка1",
+    "category": "Живопись",
+    "description": "Натюрморт с кувшином и грушей.",
+    "first_seen_date": "25.04.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094554/2/20",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": true
+  },
+  {
+    "id": 2,
+    "hashtag": "#рисунок1",
+    "category": "Рисунок",
+    "description": "Построение квадрата",
+    "first_seen_date": "25.04.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094555/5/23",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": true
+  },
+  {
+    "id": 3,
+    "hashtag": "#рисунок2",
+    "category": "Рисунок",
+    "description": "Диагональные линии",
+    "first_seen_date": "28.04.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094556/5/80",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": true
+  },
+  {
+    "id": 4,
+    "hashtag": "#живопись2",
+    "category": "Живопись",
+    "description": "Прямоугольник и круг",
+    "first_seen_date": "28.04.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094557/2/24",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 5,
+    "hashtag": "#композиция1",
+    "category": "Композиция",
+    "description": "Добрый, злой лес",
+    "first_seen_date": "30.04.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094558/7/25",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 6,
+    "hashtag": "#упржив1",
+    "category": "Живопись",
+    "description": "Цветные штрихи",
+    "first_seen_date": "06.05.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094559/2/36",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 7,
+    "hashtag": "#упррис1",
+    "category": "Рисунок",
+    "description": "Переменовано в #штрих1 Часть 1.",
+    "first_seen_date": "13.05.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094560/5/82",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 8,
+    "hashtag": "#упррис2",
+    "category": "Рисунок",
+    "description": "Переменовано в #штрих1 Часть 2.",
+    "first_seen_date": "13.05.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094561/5/83",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 9,
+    "hashtag": "#рисунок3",
+    "category": "Рисунок",
+    "description": "Линейный рисунок пяти предметов",
+    "first_seen_date": "13.05.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094562/5/84",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 10,
+    "hashtag": "#живопись3",
+    "category": "Живопись",
+    "description": "Часы, чайник, лимон.",
+    "first_seen_date": "18.05.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094563/2/42",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": true
+  },
+  {
+    "id": 11,
+    "hashtag": "#упррис3",
+    "category": "Рисунок",
+    "description": "Стопка эллипсов",
+    "first_seen_date": "01.06.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094564/5/100",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 12,
+    "hashtag": "#упррис4",
+    "category": "Рисунок",
+    "description": "Эллипсы на плоскости",
+    "first_seen_date": "01.06.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094565/5/103",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 13,
+    "hashtag": "#штрих1",
+    "category": "Рисунок",
+    "description": "Упражнения для постановки руки",
+    "first_seen_date": "09.06.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094566/5/82",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 14,
+    "hashtag": "#рисунок4",
+    "category": "Рисунок",
+    "description": "Квадрат в перспективе",
+    "first_seen_date": "10.06.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094567/5/133",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 15,
+    "hashtag": "#пленэр2026",
+    "category": "Пленэр",
+    "description": "Общее задание на лето",
+    "first_seen_date": "11.06.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094568/13/27",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 16,
+    "hashtag": "#живопись4",
+    "category": "Живопись",
+    "description": "Зелёные бутылка и перец + горшок.",
+    "first_seen_date": "11.06.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094569/2/50",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 17,
+    "hashtag": "#рисунок5",
+    "category": "Рисунок",
+    "description": "Круг в перспективе",
+    "first_seen_date": "17.06.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094570/5/187",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 18,
+    "hashtag": "#рисунок6",
+    "category": "Рисунок",
+    "description": "Цилиндр в перспективе",
+    "first_seen_date": "17.06.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094571/5/188",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 19,
+    "hashtag": "#живопись5",
+    "category": "Живопись",
+    "description": "Белая бутылка горшок тыковка",
+    "first_seen_date": "02.07.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094572/2/57",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 20,
+    "hashtag": "#пленэррека",
+    "category": "Пленэр",
+    "description": "Пленэр водоёмов и берегов",
+    "first_seen_date": "07.07.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094573/13/62",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 21,
+    "hashtag": "#стилизация1",
+    "category": "Декоративная живопись и композиция",
+    "description": "Животные в простую форму",
+    "first_seen_date": "15.07.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094574/11/78",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 22,
+    "hashtag": "#пленэрнатраве",
+    "category": "Пленэр",
+    "description": "Пленэр вид сверху",
+    "first_seen_date": "25.07.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094575/13/64",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 23,
+    "hashtag": "#пленэрфрагмент",
+    "category": "Пленэр",
+    "description": "Отдельный объект или деталь",
+    "first_seen_date": "29.07.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094576/13/66",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 24,
+    "hashtag": "#пленэрдерево",
+    "category": "Пленэр",
+    "description": "Дерево на дереве",
+    "first_seen_date": "04.08.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094577/13/73",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 25,
+    "hashtag": "#пленэрдеревоцвет",
+    "category": "Пленэр",
+    "description": "Дерево в цвете",
+    "first_seen_date": "11.08.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094578/13/21",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 26,
+    "hashtag": "#деревоморе",
+    "category": "Пленэр",
+    "description": "Дерево и линия горизонта",
+    "first_seen_date": "16.08.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094579/13/31",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 27,
+    "hashtag": "#дорогавполе",
+    "category": "Пленэр",
+    "description": "Уложить дорогу",
+    "first_seen_date": "25.08.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094580/13/22",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 28,
+    "hashtag": "#декив1_1",
+    "category": "Декоративная живопись и композиция",
+    "description": "Компоновка",
+    "first_seen_date": "10.09.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094581/13/54",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 29,
+    "hashtag": "#декив1_2",
+    "category": "Декоративная живопись и композиция",
+    "description": "Самое тёмное",
+    "first_seen_date": "16.09.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094582/13/64",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 30,
+    "hashtag": "#декив1_3",
+    "category": "Декоративная живопись и композиция",
+    "description": "Средний тон",
+    "first_seen_date": "23.09.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094583/13/68",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 31,
+    "hashtag": "#декив1_4",
+    "category": "Декоративная живопись и композиция",
+    "description": "Выход на финал",
+    "first_seen_date": "29.09.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094584/13/72",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 32,
+    "hashtag": "#декив1_5",
+    "category": "Декоративная живопись и композиция",
+    "description": "Контуры. Финал.",
+    "first_seen_date": "06.10.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094585/13/74",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 33,
+    "hashtag": "#осень26",
+    "category": "Пленэр",
+    "description": "Осенний пленэр",
+    "first_seen_date": "06.10.2026",
+    "links": {
+      "telegram": "https://t.me/c/3937094586/13/49",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 34,
+    "hashtag": "#рисцилиндр",
+    "category": "Рисунок",
+    "description": "Материал в школе",
+    "first_seen_date": "14.10.2026",
+    "links": {
+      "telegram": "https://t.me/c/3722485202/11/22792",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 35,
+    "hashtag": "#рискуб1",
+    "category": "Рисунок",
+    "description": "Материал в школе",
+    "first_seen_date": "21.10.2026",
+    "links": {
+      "telegram": "https://t.me/c/3722485202/11/24628",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 36,
+    "hashtag": "#рисцилиндр2",
+    "category": "Рисунок",
+    "description": "Материал в школе",
+    "first_seen_date": "21.10.2026",
+    "links": {
+      "telegram": "https://t.me/c/3722485202/11/24619",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 37,
+    "hashtag": "#рискуб2",
+    "category": "Рисунок",
+    "description": "Материал в школе",
+    "first_seen_date": "28.10.2026",
+    "links": {
+      "telegram": "https://t.me/c/3722485202/11/25830",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 38,
+    "hashtag": "#живопись6_1",
+    "category": "Живопись",
+    "description": "Материал в школе",
+    "first_seen_date": "28.10.2026",
+    "links": {
+      "telegram": "https://t.me/c/3722485202/11/25833",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 39,
+    "hashtag": "#живопись6_2",
+    "category": "Живопись",
+    "description": "Материал в школе",
+    "first_seen_date": "03.11.2026",
+    "links": {
+      "telegram": "https://t.me/c/3722485202/11/27126",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 40,
+    "hashtag": "#штрих2",
+    "category": "Рисунок",
+    "description": "Материал в школе",
+    "first_seen_date": "03.11.2026",
+    "links": {
+      "telegram": "https://t.me/c/3722485202/11/27135",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  },
+  {
+    "id": 41,
+    "hashtag": "#живопись6_3",
+    "category": "Живопись",
+    "description": "Материал в школе",
+    "first_seen_date": "10.11.2026",
+    "links": {
+      "telegram": "https://t.me/c/3722485202/11/27787",
+      "boosty": "https://boosty.to/kanalhudogka"
+    },
+    "is_active": false
+  }
+]

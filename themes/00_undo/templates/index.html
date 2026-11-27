@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Список авторов{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>Участники <span class="title-suffix">{{ title_suffix }}</span></h1>
+</div>
+
+<ul class="user-list">
+    {% for u in main_users %}
+    <li class="user-item">
+        <a class="user-link" href="user_{{ u.from_id }}.html">
+            <span class="list-num">{{ u.list_number }}</span>
+            <span class="user-name">{{ u.name }}</span>
+            {% if u.from_id in new_count_by_user %}
+                <span class="new-badges">
+                {% for idx, cnt in new_count_by_user[u.from_id].items() %}
+                    <span class="new-count" style="--badge-color: {{ new_reviews[idx].color }}">🆕 {{ cnt }}</span>
+                {% endfor %}
+                </span>
+            {% endif %}
+            <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m9 18 6-6-6-6"/>
+            </svg>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+
+{% if unknown_users %}
+<div class="page-header secondary">
+    <h2>Новые участники</h2>
+</div>
+<ul class="user-list">
+    {% for u in unknown_users %}
+    <li class="user-item">
+        <a class="user-link" href="user_{{ u.from_id }}.html">
+            <span class="list-num unknown">?</span>
+            <span class="user-name">{{ u.name }}</span>
+            {% if u.from_id in new_count_by_user %}
+                <span class="new-badges">
+                {% for idx, cnt in new_count_by_user[u.from_id].items() %}
+                    <span class="new-count" style="--badge-color: {{ new_reviews[idx].color }}">🆕 {{ cnt }}</span>
+                {% endfor %}
+                </span>
+            {% endif %}
+            <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m9 18 6-6-6-6"/>
+            </svg>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,33 @@
+<div class="tag-filters" id="tagFilters">
+    {% for category, tags in grouped_hashtags.items() %}
+    <details class="filter-group">
+        <summary class="filter-group-btn">
+            <button type="button" class="group-master-cb" data-state="all" title="Выбрано всё" aria-label="Выбрано всё"></button>
+            <span class="filter-group-label">{{ category }}</span>
+            <span class="filter-count" data-category="{{ category }}"></span>
+            <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="m6 9 6 6 6-6"/>
+            </svg>
+        </summary>
+        <div class="filter-group-panel">
+            {% for tag in tags %}
+            <label class="filter-item">
+                <input type="checkbox" class="filter-checkbox" value="{{ tag }}" data-category="{{ category }}" checked>
+                <span class="filter-item-label">{{ tag }}</span>
+            </label>
+            {% endfor %}
+        </div>
+    </details>
+    {% endfor %}
+
+    {% if new_reviews %}
+    <div class="filter-new-group">
+        {% for r in new_reviews %}
+        <label class="filter-item new-item" style="--accent: {{ r.color }}">
+            <input type="checkbox" class="filter-checkbox new-checkbox" value="new_{{ loop.index0 }}" checked>
+            <span class="filter-item-label">🆕 Новые {{ loop.index }}</span>
+        </label>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>

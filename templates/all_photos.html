@@ -2,10 +2,16 @@
 {% block title %}Общая выставка{% endblock %}
 {% block filters %}{% include 'partials/filters.html' %}{% endblock %}
 {% block content %}
-<h1>Общая выставка {{ title_suffix }}</h1>
+<div class="page-header">
+    <h1>Общая выставка <span class="title-suffix">{{ title_suffix }}</span></h1>
+</div>
+
 {% for u in all_to_gen %}
 <section class="author-block">
-    <h2>{{ u.list_number }}. {{ u.name }}</h2>
+    <h2 class="author-title">
+        <span class="list-num-inline">{{ u.list_number }}</span>
+        {{ u.name }}
+    </h2>
     <div class="gallery">
         {% for img in u.photos %}
             {% with fancybox_group="all_gallery" %}

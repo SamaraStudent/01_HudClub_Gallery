@@ -1,9 +1,14 @@
 <div class="gallery-item" data-tags="{{ img.tag }}" {% if img.new_idx is not none %}data-new="{{ img.new_idx }}"{% endif %}>
-    <a href="{{ img.web_p }}" data-fancybox="{{ fancybox_group }}" data-caption="{{ img.caption }}">
+    <a href="{{ img.web_p }}" data-fancybox="{{ fancybox_group }}" data-caption="{{ img.caption }}" class="gallery-link">
         <img src="{{ img.web_p }}" loading="lazy" alt="">
+        <div class="gallery-overlay"></div>
     </a>
     {% if img.new_idx is not none %}
-    <div class="new-badge" style="background:{{ img.new_color }}">🆕 Новое {{ img.new_idx + 1 }}</div>
+    <div class="new-badge" style="--badge-color: {{ img.new_color }}">
+        <span>🆕</span> Новое {{ img.new_idx + 1 }}
+    </div>
     {% endif %}
+    {% if img.tag %}
     <div class="tag-badge">{{ img.tag }}</div>
+    {% endif %}
 </div>
